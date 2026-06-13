@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  STUDENT
+  EMPLOYER
+  ADMIN
+}
+
+enum ApplicationStatus {
+  POSTULADO
+  EN_REVISION
+  ACEPTADO
+  RECHAZADO
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  email             String    @unique
+  password          String
+  userType          UserType
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  emailVerified     Boolean  @default(false)
+  verifyToken       String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  student       Student?
+  employer      Employer?
+  notifications Notification[]
+}
+
+model Student {
+  id                  Int      @id @default(autoincrement())
+  userId              Int      @unique
+  firstName           String
+  lastName            String
+  phone               String?
+  birthDate           DateTime?
+  identification      String?
+  country             String?
+  city                String?
+  desiredPosition     String?
+  career              String?
+  profileDescription  String?
+  willingToTravel     Boolean  @default(false)
+  languages           String?
+  cvPath              String?
+  photoPath           String?
+  hasWorkExperience   Boolean  @default(false)
+  workExperience      String?
+  hasDriverLicense    Boolean  @default(false)
+  technicalSkills     String?
+  softSkills          String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user          User           @relation(fields: [userId], references: [id])
+  applications  Application[]
+  favorites     Favorite[]
+  profileViews  ProfileView[]
+  jobAlerts     JobAlert[]
+}
+
+model Employer {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  repName         String
+  phone           String?
+  companyName     String
+  companySchedule String?
+  city            String?
+  country         String?
+  duiRep          String?
+  workerCount     Int?
+  sector          String?
+  fiscalRegPath   String?
+  annualVacancies Int?
+  photoPath       String?
+  verified        Boolean  @default(false)
+  verifiedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id])
+  jobPosts     JobPost[]
+  profileViews ProfileView[]
+}
+
+model JobPost {
+  id                 Int      @id @default(autoincrement())
+  employerId         Int
+  title              String
+  description        String
+  jobType            String
+  experienceRequired String?
+  minEducation       String?
+  careerYear         String?
+  technicalSkills    String?
+  workConditions     String?
+  studentBenefits    String?
+  salary             String?
+  softSkills         String?
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  employer     Employer      @relation(fields: [employerId], references: [id])
+  applications Application[]
+  favorites    Favorite[]
+}
+
+model Application {
+  id        Int               @id @default(autoincrement())
+  studentId Int
+  jobPostId Int
+  status    ApplicationStatus @default(POSTULADO)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  jobPostId Int
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+  jobPost JobPost @relation(fields: [jobPostId], references: [id])
+
+  @@unique([studentId, jobPostId])
+}
+
+model ProfileView {
+  id         Int      @id @default(autoincrement())
+  studentId  Int
+  employerId Int
+  viewedAt   DateTime @default(now())
+
+  student  Student  @relation(fields: [studentId], references: [id])
+  employer Employer @relation(fields: [employerId], references: [id])
+}
+
+model UniversityDomain {
+  id          Int      @id @default(autoincrement())
+  domain      String   @unique
+  university  String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model DomainRequest {
+  id          Int      @id @default(autoincrement())
+  domain      String
+  university  String
+  email       String
+  status      String   @default("PENDING")
+  createdAt   DateTime @default(now())
+}
+
+model JobAlert {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  keywords  String?
+  jobType   String?
+  city      String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
