@@ -1,7 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { sendPasswordResetEmail } = require('../utils/email');
+const { sendPasswordResetEmail } = require('../utils/mailer');
 const prisma = new PrismaClient();
 
 exports.requestReset = async (req, res) => {

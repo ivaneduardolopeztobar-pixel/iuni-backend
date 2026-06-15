@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
-const { sendVerificationEmail } = require('../utils/verifyEmail');
+const { sendVerificationEmail } = require('../utils/mailer');
 const prisma = new PrismaClient();
 
 const generateToken = (user) =>
