@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
-const { sendVerificationEmail } = require('../utils/mailer');
+const { sendVerificationEmail, sendWelcomeEmployerEmail } = require('../utils/mailer');
 const prisma = new PrismaClient();
 
 const generateToken = (user) =>
@@ -74,6 +74,12 @@ exports.register = async (req, res) => {
       await prisma.employer.create({
         data: { userId: user.id, repName: repName || '', companyName: companyName || '' }
       });
+      // Email de bienvenida al empleador
+      try {
+        await sendWelcomeEmployerEmail(email, companyName || repName || 'tu empresa');
+      } catch (emailErr) {
+        console.error('Error enviando email bienvenida:', emailErr.message);
+      }
     }
 
     const token = generateToken(user);

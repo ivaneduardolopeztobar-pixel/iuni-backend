@@ -123,3 +123,60 @@ exports.sendStatusNotificationEmail = async (email, title, message) => {
     `
   });
 };
+
+exports.sendWelcomeEmployerEmail = async (email, companyName) => {
+  const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+  await sendEmail({
+    to: email,
+    subject: "iUNI — Bienvenido, " + companyName,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #000; color: #fff; padding: 40px; border-radius: 16px;">
+        <h1 style="font-size: 28px; font-weight: 900; margin-bottom: 4px;">
+          <span style="color: #dc2626;">i</span>UNI
+        </h1>
+        <p style="color: #6b7280; font-size: 13px; margin-bottom: 24px;">Plataforma de empleo estudiantil</p>
+        <h2 style="font-size: 20px; margin-bottom: 8px;">Bienvenido, ${companyName}</h2>
+        <p style="color: #9ca3af; margin-bottom: 24px;">
+          Tu empresa ya esta registrada en iUNI. Ahora puedes conectar con estudiantes
+          universitarios verificados de El Salvador.
+        </p>
+
+        <div style="background: #111; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+          <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 16px;">Como empezar:</h3>
+          <div style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
+            <div style="background: #dc2626; color: #fff; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; shrink: 0;">1</div>
+            <div>
+              <p style="font-weight: bold; margin: 0 0 4px;">Completa tu perfil de empresa</p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">Agrega logo, sector y descripcion para generar mas confianza.</p>
+            </div>
+          </div>
+          <div style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">
+            <div style="background: #dc2626; color: #fff; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">2</div>
+            <div>
+              <p style="font-weight: bold; margin: 0 0 4px;">Publica tu primera oferta</p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">Las ofertas llegan a estudiantes universitarios verificados.</p>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <div style="background: #dc2626; color: #fff; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">3</div>
+            <div>
+              <p style="font-weight: bold; margin: 0 0 4px;">Revisa postulaciones</p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">Ve los CVs de candidatos y gestiona el proceso desde tu panel.</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="${FRONTEND_URL}/employer/dashboard"
+          style="display: inline-block; background: #dc2626; color: #fff; font-weight: bold; padding: 14px 32px; border-radius: 12px; text-decoration: none; margin-bottom: 24px;">
+          Ir a mi panel
+        </a>
+
+        <p style="color: #6b7280; font-size: 12px; margin-top: 16px;">
+          Si tienes alguna pregunta puedes responder este email y te ayudaremos.
+        </p>
+        <hr style="border-color: #1f2937; margin: 24px 0;" />
+        <p style="color: #4b5563; font-size: 12px;">iUNI — Empleo Estudiantil El Salvador</p>
+      </div>
+    `
+  });
+};

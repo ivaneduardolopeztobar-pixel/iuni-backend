@@ -26,7 +26,7 @@ exports.getAll = async (req, res) => {
     const [jobs, total] = await Promise.all([
       prisma.jobPost.findMany({
         where,
-        include: { employer: { select: { companyName: true, city: true, photoPath: true, verified: true } } },
+        include: { employer: { select: { id: true, companyName: true, city: true, photoPath: true, verified: true } } },
         orderBy: { createdAt: 'desc' },
         skip,
         take: parseInt(limit)
@@ -51,7 +51,7 @@ exports.getOne = async (req, res) => {
   try {
     const job = await prisma.jobPost.findUnique({
       where: { id: parseInt(req.params.id) },
-      include: { employer: { select: { companyName: true, city: true, photoPath: true, sector: true } }, applications: true }
+      include: { employer: { select: { id: true, companyName: true, city: true, photoPath: true, sector: true, verified: true } }, applications: true }
     });
     if (!job) return res.status(404).json({ error: 'No encontrado' });
     res.json(job);
