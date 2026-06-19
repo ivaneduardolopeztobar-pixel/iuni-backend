@@ -1,11 +1,12 @@
 const router = require('express').Router();
 const auth = require('../middleware/auth');
 const { uploadPhoto, uploadCV } = require('../utils/cloudinary');
+const { uploadLimiter } = require('../middleware/security');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 // Foto estudiante
-router.post('/student/photo', auth, uploadPhoto.single('photo'), async (req, res) => {
+router.post('/student/photo', auth, uploadLimiter, uploadPhoto.single('photo'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se subio ninguna imagen' });
     const url = req.file.path;
@@ -21,7 +22,7 @@ router.post('/student/photo', auth, uploadPhoto.single('photo'), async (req, res
 });
 
 // CV estudiante
-router.post('/student/cv', auth, uploadCV.single('cv'), async (req, res) => {
+router.post('/student/cv', auth, uploadLimiter, uploadCV.single('cv'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se subio ningun archivo' });
     const url = req.file.path;
@@ -37,7 +38,7 @@ router.post('/student/cv', auth, uploadCV.single('cv'), async (req, res) => {
 });
 
 // Logo empleador
-router.post('/employer/photo', auth, uploadPhoto.single('photo'), async (req, res) => {
+router.post('/employer/photo', auth, uploadLimiter, uploadPhoto.single('photo'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se subio ninguna imagen' });
     const url = req.file.path;
@@ -53,7 +54,7 @@ router.post('/employer/photo', auth, uploadPhoto.single('photo'), async (req, re
 });
 
 // Logo empleador (alias)
-router.post('/employer/logo', auth, uploadPhoto.single('photo'), async (req, res) => {
+router.post('/employer/logo', auth, uploadLimiter, uploadPhoto.single('photo'), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No se subio ninguna imagen' });
     const url = req.file.path;
