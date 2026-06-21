@@ -1,19 +1,17 @@
 const router = require('express').Router();
 const { register, login, verifyEmail, resendVerification } = require('../controllers/auth.controller');
-const { authLimiter } = require('../middleware/security');
+const { loginLimiter, registerLimiter, resetLimiter } = require('../middleware/security');
 const { registerRules, loginRules, handleValidation } = require('../middleware/validate');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-router.post('/register', authLimiter, registerRules, handleValidation, register);
-router.post('/login', authLimiter, loginRules, handleValidation, login);
+router.post('/register', registerLimiter, registerRules, handleValidation, register);
+router.post('/login', loginLimiter, loginRules, handleValidation, login);
 router.post('/verify-email', verifyEmail);
-router.post('/resend-verification', authLimiter, resendVerification);
-
-module.exports = router;
+router.post('/resend-verification', resetLimiter, resendVerification);
 
 // Solicitar nuevo dominio universitario
-router.post('/request-domain', authLimiter, async (req, res) => {
-  const { PrismaClient } = require('@prisma/client');
-  const prisma = new PrismaClient();
+router.post('/request-domain', registerLimiter, async (req, res) => {
   try {
     const { domain, university, email } = req.body;
     if (!domain || !university || !email) return res.status(400).json({ error: 'Datos requeridos' });
@@ -23,3 +21,5 @@ router.post('/request-domain', authLimiter, async (req, res) => {
     res.status(500).json({ error: 'Error al enviar solicitud' });
   }
 });
+
+module.exports = router;

@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const { authLimiter } = require('../middleware/security');
+const { resetLimiter } = require('../middleware/security');
 const { requestReset, resetPassword } = require('../controllers/reset.controller');
 
-router.post('/request', authLimiter, requestReset);
-router.post('/confirm', authLimiter, resetPassword);
+router.post('/request', resetLimiter, requestReset);
+router.post('/confirm', resetLimiter, resetPassword);
 
 module.exports = router;
