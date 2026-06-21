@@ -57,22 +57,22 @@ exports.sendVerificationEmail = async (email, token, name) => {
       </div>
     `
   });
-  console.log("Email verificacion enviado a:", email);
+  console.log("Email verificación enviado a:", email);
 };
 
 exports.sendPasswordResetEmail = async (email, token) => {
   const resetUrl = FRONTEND_URL + "/reset-password?token=" + token;
   await sendEmail({
     to: email,
-    subject: "iUNI — Restablecer contrasena",
+    subject: "iUNI — Restablecer contraseña",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #000; color: #fff; padding: 40px; border-radius: 16px;">
         <h1 style="font-size: 28px; font-weight: 900;"><span style="color: #dc2626;">i</span>UNI</h1>
-        <h2 style="font-size: 20px; margin: 16px 0;">Restablecer contrasena</h2>
-        <p style="color: #9ca3af; margin-bottom: 24px;">Haz click para crear una nueva contrasena.</p>
+        <h2 style="font-size: 20px; margin: 16px 0;">Restablecer contraseña</h2>
+        <p style="color: #9ca3af; margin-bottom: 24px;">Haz click para crear una nueva contraseña.</p>
         <a href="${resetUrl}"
           style="display: inline-block; background: #dc2626; color: #fff; font-weight: bold; padding: 14px 32px; border-radius: 12px; text-decoration: none;">
-          Restablecer contrasena
+          Restablecer contraseña
         </a>
         <p style="color: #6b7280; font-size: 12px; margin-top: 24px;">Este enlace expira en 1 hora.</p>
         <hr style="border-color: #1f2937; margin: 24px 0;" />
@@ -147,7 +147,7 @@ exports.sendWelcomeEmployerEmail = async (email, companyName) => {
             <div style="background: #dc2626; color: #fff; font-weight: bold; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; shrink: 0;">1</div>
             <div>
               <p style="font-weight: bold; margin: 0 0 4px;">Completa tu perfil de empresa</p>
-              <p style="color: #6b7280; font-size: 12px; margin: 0;">Agrega logo, sector y descripcion para generar mas confianza.</p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">Agrega logo, sector y descripción para generar mas confianza.</p>
             </div>
           </div>
           <div style="margin-bottom: 12px; display: flex; align-items: flex-start; gap: 12px;">

@@ -15,7 +15,7 @@ const registerRules = [
     .isEmail().withMessage('Email invalido')
     .normalizeEmail(),
   body('password')
-    .isLength({ min: 8 }).withMessage('La contrasena debe tener al menos 8 caracteres')
+    .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
     .matches(/[A-Z]/).withMessage('Debe contener al menos una mayuscula')
     .matches(/[0-9]/).withMessage('Debe contener al menos un numero'),
   body('userType')
@@ -27,7 +27,7 @@ const loginRules = [
     .isEmail().withMessage('Email invalido')
     .normalizeEmail(),
   body('password')
-    .notEmpty().withMessage('Contrasena requerida'),
+    .notEmpty().withMessage('Contraseña requerida'),
 ];
 
 module.exports = { handleValidation, registerRules, loginRules };

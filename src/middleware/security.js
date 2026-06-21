@@ -31,7 +31,7 @@ const registerLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Rate limit para RESET de contraseña y verificacion de email
+// Rate limit para RESET de contraseña y verificación de email
 const resetLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: isDev ? 200 : 5,

@@ -46,7 +46,7 @@ exports.register = async (req, res) => {
 
     const hashed = await bcrypt.hash(password, 12);
 
-    // Estudiantes requieren verificacion de email
+    // Estudiantes requieren verificación de email
     const needsVerification = userType === 'STUDENT';
     const verifyToken = needsVerification ? crypto.randomBytes(32).toString('hex') : null;
 
@@ -64,11 +64,11 @@ exports.register = async (req, res) => {
       await prisma.student.create({
         data: { userId: user.id, firstName: firstName || '', lastName: lastName || '' }
       });
-      // Enviar email de verificacion
+      // Enviar email de verificación
       try {
         await sendVerificationEmail(email, verifyToken, firstName);
       } catch (emailErr) {
-        console.error('Error enviando email de verificacion:', emailErr.message);
+        console.error('Error enviando email de verificación:', emailErr.message);
       }
     } else if (userType === 'EMPLOYER') {
       await prisma.employer.create({
@@ -187,7 +187,7 @@ exports.resendVerification = async (req, res) => {
     await prisma.user.update({ where: { id: user.id }, data: { verifyToken } });
     const student = await prisma.student.findUnique({ where: { userId: user.id } });
     await sendVerificationEmail(email, verifyToken, student?.firstName);
-    res.json({ message: 'Correo de verificacion reenviado' });
+    res.json({ message: 'Correo de verificación reenviado' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error' });

@@ -38,7 +38,7 @@ exports.resetPassword = async (req, res) => {
     const { token, password } = req.body;
     if (!token || !password) return res.status(400).json({ error: 'Datos requeridos' });
 
-    if (password.length < 8) return res.status(400).json({ error: 'La contrasena debe tener al menos 8 caracteres' });
+    if (password.length < 8) return res.status(400).json({ error: 'La contraseña debe tener al menos 8 caracteres' });
     if (!/[A-Z]/.test(password)) return res.status(400).json({ error: 'Debe contener al menos una mayuscula' });
     if (!/[0-9]/.test(password)) return res.status(400).json({ error: 'Debe contener al menos un numero' });
 
@@ -62,9 +62,9 @@ exports.resetPassword = async (req, res) => {
       }
     });
 
-    res.json({ message: 'Contrasena actualizada exitosamente' });
+    res.json({ message: 'Contraseña actualizada exitosamente' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Error al restablecer contrasena' });
+    res.status(500).json({ error: 'Error al restablecer contraseña' });
   }
 };

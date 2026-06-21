@@ -190,7 +190,7 @@ exports.toggleVerified = async (req, res) => {
         data: {
           userId: (await prisma.user.findFirst({ where: { employer: { id: employer.id } } })).id,
           title: 'Empresa verificada',
-          message: 'Tu empresa ha sido verificada por el equipo de iUNI. Ahora apareces con el badge de verificacion.'
+          message: 'Tu empresa ha sido verificada por el equipo de iUNI. Ahora apareces con el badge de verificación.'
         }
       });
     }
