@@ -193,3 +193,39 @@ exports.resendVerification = async (req, res) => {
     res.status(500).json({ error: 'Error' });
   }
 };
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ error: 'Datos requeridos' });
+    }
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'La nueva contraseña debe tener al menos 8 caracteres' });
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      return res.status(400).json({ error: 'Debe contener al menos una mayúscula' });
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      return res.status(400).json({ error: 'Debe contener al menos un número' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+
+    const valid = await bcrypt.compare(currentPassword, user.password);
+    if (!valid) return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+
+    const sameAsOld = await bcrypt.compare(newPassword, user.password);
+    if (sameAsOld) return res.status(400).json({ error: 'La nueva contraseña debe ser diferente a la actual' });
+
+    const hashed = await bcrypt.hash(newPassword, 12);
+    await prisma.user.update({ where: { id: user.id }, data: { password: hashed } });
+
+    res.json({ message: 'Contraseña actualizada exitosamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al cambiar contraseña' });
+  }
+};

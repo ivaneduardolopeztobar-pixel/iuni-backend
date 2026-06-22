@@ -1,7 +1,8 @@
 const router = require('express').Router();
-const { register, login, verifyEmail, resendVerification } = require('../controllers/auth.controller');
+const { register, login, verifyEmail, resendVerification, changePassword } = require('../controllers/auth.controller');
 const { loginLimiter, registerLimiter, resetLimiter } = require('../middleware/security');
 const { registerRules, loginRules, handleValidation } = require('../middleware/validate');
+const auth = require('../middleware/auth');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
@@ -9,6 +10,7 @@ router.post('/register', registerLimiter, registerRules, handleValidation, regis
 router.post('/login', loginLimiter, loginRules, handleValidation, login);
 router.post('/verify-email', verifyEmail);
 router.post('/resend-verification', resetLimiter, resendVerification);
+router.post('/change-password', auth, loginLimiter, changePassword);
 
 // Solicitar nuevo dominio universitario
 router.post('/request-domain', registerLimiter, async (req, res) => {
