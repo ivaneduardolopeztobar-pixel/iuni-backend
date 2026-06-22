@@ -6,7 +6,7 @@ const isDev = process.env.NODE_ENV === 'development';
 // Rate limit general
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
-  max: isDev ? 1000 : 100,
+  max: isDev ? 3000 : 300,
   message: { error: 'Demasiadas peticiones, intenta en 15 minutos' },
   standardHeaders: true,
   legacyHeaders: false,
