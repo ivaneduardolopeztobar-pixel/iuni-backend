@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { PrismaClient } = require('@prisma/client');
 const { sendVerificationEmail, sendWelcomeEmployerEmail } = require('../utils/mailer');
+const { classifyEmailDomain } = require('../utils/domainClassifier');
 const prisma = new PrismaClient();
 
 const generateToken = (user) =>
@@ -71,8 +72,9 @@ exports.register = async (req, res) => {
         console.error('Error enviando email de verificación:', emailErr.message);
       }
     } else if (userType === 'EMPLOYER') {
+      const emailDomainType = classifyEmailDomain(email);
       await prisma.employer.create({
-        data: { userId: user.id, repName: repName || '', companyName: companyName || '' }
+        data: { userId: user.id, repName: repName || '', companyName: companyName || '', emailDomainType }
       });
       // Email de bienvenida al empleador
       try {

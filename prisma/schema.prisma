@@ -84,6 +84,8 @@ model Employer {
   fiscalRegPath   String?
   annualVacancies Int?
   photoPath       String?
+  website         String?
+  emailDomainType String   @default("GENERIC")
   verified        Boolean  @default(false)
   verifiedAt      DateTime?
   createdAt       DateTime @default(now())
