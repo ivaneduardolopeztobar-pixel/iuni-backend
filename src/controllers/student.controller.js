@@ -38,3 +38,35 @@ exports.updateProfile = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar perfil' });
   }
 };
+
+exports.getPublicProfile = async (req, res) => {
+  try {
+    const student = await prisma.student.findUnique({
+      where: { id: parseInt(req.params.studentId) },
+      select: {
+        id: true, firstName: true, lastName: true, phone: true,
+        city: true, country: true, desiredPosition: true, career: true,
+        profileDescription: true, languages: true, technicalSkills: true,
+        softSkills: true, photoPath: true, cvPath: true,
+        hasWorkExperience: true, workExperience: true,
+        hasDriverLicense: true, willingToTravel: true,
+        user: { select: { email: true } }
+      }
+    });
+    if (!student) return res.status(404).json({ error: 'No encontrado' });
+
+    // Reemplazar email con nombre de universidad basado en el dominio
+    let university = null;
+    if (student.user?.email) {
+      const domain = student.user.email.split('@')[1];
+      const uniDomain = await prisma.universityDomain.findUnique({ where: { domain } });
+      university = uniDomain ? uniDomain.university : null;
+    }
+
+    const { user, ...rest } = student;
+    res.json({ ...rest, university });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error' });
+  }
+};
