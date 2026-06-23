@@ -85,6 +85,7 @@ exports.create = async (req, res) => {
 exports.update = async (req, res) => {
   try {
     const employer = await prisma.employer.findUnique({ where: { userId: req.user.id } });
+    if (!employer) return res.status(403).json({ error: 'No autorizado' });
     const job = await prisma.jobPost.findUnique({ where: { id: parseInt(req.params.id) } });
     if (!job || job.employerId !== employer.id) return res.status(403).json({ error: 'No autorizado' });
     const allowed = ['title','description','jobType','experienceRequired','minEducation',
@@ -104,6 +105,7 @@ exports.update = async (req, res) => {
 exports.remove = async (req, res) => {
   try {
     const employer = await prisma.employer.findUnique({ where: { userId: req.user.id } });
+    if (!employer) return res.status(403).json({ error: 'No autorizado' });
     const job = await prisma.jobPost.findUnique({ where: { id: parseInt(req.params.id) } });
     if (!job || job.employerId !== employer.id) return res.status(403).json({ error: 'No autorizado' });
     await prisma.jobPost.update({ where: { id: job.id }, data: { isActive: false } });
@@ -114,6 +116,7 @@ exports.remove = async (req, res) => {
 exports.getByEmployer = async (req, res) => {
   try {
     const employer = await prisma.employer.findUnique({ where: { userId: req.user.id } });
+    if (!employer) return res.status(403).json({ error: 'No autorizado' });
     const jobs = await prisma.jobPost.findMany({
       where: { employerId: employer.id },
       include: { applications: { include: { student: true } } },

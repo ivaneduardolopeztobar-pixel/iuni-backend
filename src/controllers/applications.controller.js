@@ -43,6 +43,7 @@ exports.apply = async (req, res) => {
 exports.getMyApplications = async (req, res) => {
   try {
     const student = await prisma.student.findUnique({ where: { userId: req.user.id } });
+    if (!student) return res.status(403).json({ error: 'Solo estudiantes' });
     const apps = await prisma.application.findMany({
       where: { studentId: student.id },
       include: { jobPost: { include: { employer: { select: { companyName: true } } } } },
@@ -55,6 +56,7 @@ exports.getMyApplications = async (req, res) => {
 exports.getJobApplications = async (req, res) => {
   try {
     const employer = await prisma.employer.findUnique({ where: { userId: req.user.id } });
+    if (!employer) return res.status(403).json({ error: 'No autorizado' });
     const job = await prisma.jobPost.findUnique({ where: { id: parseInt(req.params.jobId) } });
     if (!job || job.employerId !== employer.id) return res.status(403).json({ error: 'No autorizado' });
     const apps = await prisma.application.findMany({
