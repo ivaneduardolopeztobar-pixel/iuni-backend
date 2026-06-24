@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+dotenv.config();
 const path = require('path');
 const { helmet, generalLimiter } = require('./middleware/security');
 const morgan = require('morgan');
 
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
